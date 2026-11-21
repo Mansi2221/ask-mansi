@@ -1,78 +1,79 @@
 "use client";
 
 import { useChat } from "@ai-sdk/react";
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { useState, useRef, useEffect } from "react";
+
+/* ───── data ───── */
 
 const SUGGESTED = [
   { q: "What production AI systems has she built?", icon: "🔧" },
   { q: "Tell me about her RAG and multi-agent experience", icon: "🤖" },
   { q: "What open source contributions has she made?", icon: "🌍" },
-  { q: "Why should we hire Mansi as an FDE?", icon: "💡" },
+  { q: "Why should we hire Mansi?", icon: "💡" },
   { q: "What's her tech stack?", icon: "⚡" },
-  { q: "Show me her most complex project", icon: "🏗️" },
+  { q: "Tell me about her IBM experience", icon: "🏢" },
 ];
 
 const PROJECTS = [
   {
     name: "Forge",
-    desc: "AI Agent Evaluation & Orchestration Platform — multi-agent workflows, RAG, LLM eval, guardrails, cost tracking",
-    tags: ["FastAPI", "Claude API", "LangGraph", "Next.js", "Docker"],
+    desc: "AI Agent Evaluation & Orchestration — multi-agent workflows, RAG, LLM eval, guardrails, cost tracking",
+    tags: ["FastAPI", "Claude API", "LangGraph", "Next.js"],
     live: "https://web-lyart-gamma-37.vercel.app",
     code: "https://github.com/Mansi2221/forge",
-    color: "#6366f1",
-    emoji: "🛡️",
+    gradient: "from-purple-500 to-blue-500",
+    glow: "rgba(168,85,247,0.15)",
+    span: "md:col-span-2",
   },
   {
     name: "DeployKit",
-    desc: "Production readiness scanner — paste a repo URL, get instant deploy/no-deploy verdict across 6 categories",
-    tags: ["Python", "Click", "Rich", "Next.js", "52 tests"],
+    desc: "Production readiness scanner — instant deploy/no-deploy verdict across 6 categories, 52 tests",
+    tags: ["Python", "CLI", "Next.js"],
     live: "https://deploykit.vercel.app",
     code: "https://github.com/Mansi2221/deploykit",
-    color: "#10b981",
-    emoji: "📊",
+    gradient: "from-green-400 to-cyan-500",
+    glow: "rgba(34,197,94,0.15)",
+    span: "",
   },
   {
     name: "Eligible",
-    desc: "Clinical trial matching — OMOP harmonization, agentic matching with LangGraph, PHI redaction, FHIR output",
-    tags: ["LangGraph", "dbt", "FHIR", "FastAPI", "Next.js"],
+    desc: "Clinical trial matching — OMOP harmonization, agentic matching, PHI redaction, FHIR output",
+    tags: ["LangGraph", "dbt", "FHIR", "FastAPI"],
     code: "https://github.com/Mansi2221/eligible",
-    color: "#f59e0b",
-    emoji: "🏥",
+    gradient: "from-yellow-400 to-orange-500",
+    glow: "rgba(249,115,22,0.15)",
+    span: "",
   },
   {
     name: "TalentRAG",
-    desc: "Hybrid retrieval (sparse + dense), cross-encoder reranking, LLM judge evaluation suite",
-    tags: ["FAISS", "FastAPI", "Streamlit", "Docker"],
+    desc: "Hybrid retrieval (sparse + dense), cross-encoder reranking, LLM judge evaluation",
+    tags: ["FAISS", "FastAPI", "Docker"],
     code: "https://github.com/Mansi2221/talent-rag",
-    color: "#ec4899",
-    emoji: "🎯",
+    gradient: "from-pink-500 to-rose-500",
+    glow: "rgba(236,72,153,0.15)",
+    span: "",
   },
   {
     name: "Clarify",
-    desc: "AI Business Analyst — brief in, full deliverable pack out: requirements, RTM, test cases, RACI",
-    tags: ["Next.js 16", "Vercel AI SDK", "React 19"],
+    desc: "AI Business Analyst — brief in, full deliverable pack out. 70x speedup over manual review",
+    tags: ["Next.js 16", "AI SDK", "FastAPI"],
     live: "https://clarify-alpha.vercel.app",
     code: "https://github.com/Mansi2221/clarify",
-    color: "#f97316",
-    emoji: "📋",
+    gradient: "from-orange-400 to-red-500",
+    glow: "rgba(239,68,68,0.15)",
+    span: "",
   },
   {
     name: "TravelMind",
-    desc: "5 parallel tool calls, real-time web search, structured travel briefings in under 10 seconds",
-    tags: ["Groq", "Tavily", "Next.js", "Vercel"],
+    desc: "5 parallel tool calls, real-time web search, structured travel briefings in <10s",
+    tags: ["Groq", "Tavily", "Next.js"],
     live: "https://travelmind-ten.vercel.app",
     code: "https://github.com/Mansi2221/travelmind",
-    color: "#14b8a6",
-    emoji: "✈️",
+    gradient: "from-cyan-400 to-blue-500",
+    glow: "rgba(6,182,212,0.15)",
+    span: "md:col-span-2",
   },
-];
-
-const STATS = [
-  { label: "Years Experience", value: 4, suffix: "+", icon: "💼" },
-  { label: "Live Projects", value: 8, suffix: "", icon: "🚀" },
-  { label: "Open Source PRs", value: 11, suffix: "", icon: "🔀" },
-  { label: "GenAI PoCs Delivered", value: 10, suffix: "+", icon: "⚡" },
 ];
 
 const EXPERIENCE = [
@@ -81,13 +82,17 @@ const EXPERIENCE = [
     company: "IBM",
     location: "USA",
     period: "May 2026 – Aug 2026",
-    color: "#6366f1",
+    gradient: "from-purple-500 to-blue-500",
+    icon: "🚀",
+    highlights: [
+      { metric: "10+", label: "GenAI PoCs delivered" },
+      { metric: "45%", label: "reduction in inaccurate responses" },
+      { metric: "35%", label: "faster solution evaluation" },
+    ],
     bullets: [
-      "Engineered multi-agent AI workflows using LangGraph, watsonx.ai, MCP, and Python — planning, tool routing, and self-reflection in enterprise SDLC",
-      "Built RAG pipelines with watsonx.data, vector embeddings, FastAPI, and secure data mappings — reduced manual lookup time by ~20%",
-      "Collaborated with client PMs and engineers to translate business requirements into working GenAI prototypes with guardrails",
-      "Evaluated outputs across GPT-5, Claude, Gemini, DeepSeek, and Llama — reduced inaccurate responses by 45%, increased consistency by 26%",
-      "Delivered 10+ GenAI PoCs with client stakeholders using Claude Code and GitHub Copilot — reduced evaluation time by 35%",
+      "Multi-agent AI workflows with LangGraph, watsonx.ai, MCP — planning, tool routing, self-reflection",
+      "RAG pipelines reducing manual lookup time by ~20% during client PoC testing",
+      "Guardrails for prompt injection, data leakage, and hallucinations across GPT-5, Claude, Gemini",
     ],
   },
   {
@@ -95,13 +100,17 @@ const EXPERIENCE = [
     company: "Hexaware Technologies",
     location: "India",
     period: "Aug 2023 – Jul 2025",
-    color: "#8b5cf6",
+    gradient: "from-cyan-400 to-green-400",
+    icon: "🤖",
+    highlights: [
+      { metric: "15%", label: "retrieval relevance boost" },
+      { metric: "45%", label: "less manual research" },
+      { metric: "20%", label: "automation time saved" },
+    ],
     bullets: [
-      "Partnered with business and client teams to scope GenAI use cases, define AI requirements, and deploy solutions in enterprise environments",
-      "Increased retrieval relevance by 15% building RAG pipelines with LangChain, LlamaIndex, embeddings, and vector databases",
-      "Cut manual research effort by 45% with semantic search and Text-to-SQL on Azure OpenAI, LangChain, and Pinecone",
-      "Reduced manual handling time by 20% with multi-agent workflows built on CrewAI and LLM tool calling",
-      "Reduced average token consumption by 10% through evaluation and tuning with Ragas and LangSmith",
+      "RAG pipelines with LangChain, LlamaIndex, embeddings, and vector databases",
+      "Semantic search and Text-to-SQL on Azure OpenAI, Pinecone",
+      "Multi-agent workflows with CrewAI and LLM tool calling",
     ],
   },
   {
@@ -109,539 +118,583 @@ const EXPERIENCE = [
     company: "Cybage Software",
     location: "India",
     period: "Jun 2021 – Jul 2023",
-    color: "#ec4899",
+    gradient: "from-orange-400 to-pink-500",
+    icon: "⚙️",
+    highlights: [
+      { metric: "10%", label: "faster query response" },
+      { metric: "15%", label: "fewer deploy steps" },
+      { metric: "8%", label: "fewer recurring defects" },
+    ],
     bullets: [
-      "Built REST APIs, business logic, and application integrations in Java and Spring Boot for enterprise applications",
-      "Optimized SQL queries and PostgreSQL indexing — reduced response time by 10%",
-      "Built microservice components with API integrations, Redis caching to improve service performance",
-      "Automated builds and deployments with Git, Docker, Jenkins, and AWS — reduced manual steps by 15%",
+      "Java, Spring Boot — REST APIs, microservices, Redis caching",
+      "PostgreSQL optimization with indexing strategies",
+      "CI/CD with Docker, Jenkins, AWS, GitHub Actions",
     ],
   },
 ];
 
-const OSS = [
-  { repo: "anthropics/anthropic-cookbook", count: 7, desc: "Bug fixes in financial models, eval prompts, session browser" },
-  { repo: "run-llama/llama_index", count: 3, desc: "Triplet parser fix, Colab badges, OpenAILike docs" },
-  { repo: "microsoft/agent-governance-toolkit", count: 1, desc: "PII false positive reduction in MCP Security Gateway" },
+const SKILLS = [
+  { cat: "GenAI & Agents", items: ["LangGraph", "CrewAI", "LangChain", "LlamaIndex", "MCP", "Claude API", "GPT-5", "watsonx.ai"], color: "#a855f7" },
+  { cat: "RAG & LLM Eng", items: ["RAG", "Text-to-SQL", "Embeddings", "Semantic Search", "Prompt Engineering", "Tool Calling"], color: "#3b82f6" },
+  { cat: "LLM Eval & Safety", items: ["Ragas", "TruLens", "LangSmith", "NeMo Guardrails", "Guardrails AI", "LLM Observability"], color: "#06b6d4" },
+  { cat: "Backend", items: ["FastAPI", "Flask", "Spring Boot", "REST APIs", "Microservices", "Node.js"], color: "#22c55e" },
+  { cat: "Data", items: ["PostgreSQL", "MongoDB", "Redis", "Pinecone", "pgvector", "FAISS", "ETL"], color: "#eab308" },
+  { cat: "Cloud & DevOps", items: ["Azure", "AWS", "Docker", "Kubernetes", "Jenkins", "GitHub Actions"], color: "#f97316" },
 ];
 
-function getMessageText(message: { parts: Array<{ type: string; text?: string }> }): string {
-  return message.parts.filter((p) => p.type === "text").map((p) => p.text ?? "").join("");
+const MARQUEE_SKILLS = [
+  "Python", "Java", "TypeScript", "SQL", "LangGraph", "CrewAI", "LangChain",
+  "Claude API", "GPT-5", "FastAPI", "Spring Boot", "Next.js", "React",
+  "Docker", "Kubernetes", "AWS", "Azure", "PostgreSQL", "Redis", "Pinecone",
+  "RAG", "Multi-Agent", "Guardrails", "LLM Eval", "MCP", "watsonx.ai",
+];
+
+const OSS = [
+  { repo: "anthropics/anthropic-cookbook", count: 7, color: "#a855f7" },
+  { repo: "run-llama/llama_index", count: 3, color: "#3b82f6" },
+  { repo: "microsoft/agent-governance-toolkit", count: 1, color: "#22c55e" },
+];
+
+/* ───── helpers ───── */
+
+function getMessageText(msg: { parts: Array<{ type: string; text?: string }> }) {
+  return msg.parts.filter((p) => p.type === "text").map((p) => p.text ?? "").join("");
 }
 
-function AnimatedCounter({ value, suffix = "" }: { value: number; suffix?: string }) {
+function Counter({ value, suffix = "" }: { value: number; suffix?: string }) {
   const [count, setCount] = useState(0);
   const ref = useRef<HTMLSpanElement>(null);
-
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          let start = 0;
-          const duration = 1500;
-          const step = (timestamp: number) => {
-            if (!start) start = timestamp;
-            const progress = Math.min((timestamp - start) / duration, 1);
-            const eased = 1 - Math.pow(1 - progress, 3);
-            setCount(Math.floor(eased * value));
-            if (progress < 1) requestAnimationFrame(step);
+    const obs = new IntersectionObserver(
+      ([e]) => {
+        if (e.isIntersecting) {
+          let s = 0;
+          const step = (t: number) => {
+            if (!s) s = t;
+            const p = Math.min((t - s) / 1500, 1);
+            setCount(Math.floor((1 - Math.pow(1 - p, 3)) * value));
+            if (p < 1) requestAnimationFrame(step);
           };
           requestAnimationFrame(step);
-          observer.disconnect();
+          obs.disconnect();
         }
       },
-      { threshold: 0.3 }
+      { threshold: 0.3 },
     );
-    if (ref.current) observer.observe(ref.current);
-    return () => observer.disconnect();
+    if (ref.current) obs.observe(ref.current);
+    return () => obs.disconnect();
   }, [value]);
-
   return <span ref={ref}>{count}{suffix}</span>;
 }
 
+/* ───── variants ───── */
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 40 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.7, ease: "easeOut" as const } },
+};
+const stagger = { show: { transition: { staggerChildren: 0.08 } } };
+const scaleIn = {
+  hidden: { opacity: 0, scale: 0.9 },
+  show: { opacity: 1, scale: 1, transition: { duration: 0.5, ease: "easeOut" as const } },
+};
+
+/* ───── page ───── */
+
 export default function Home() {
   const { messages, sendMessage, status } = useChat();
-  const [inputValue, setInputValue] = useState("");
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const [input, setInput] = useState("");
+  const endRef = useRef<HTMLDivElement>(null);
   const chatRef = useRef<HTMLDivElement>(null);
+  const heroRef = useRef<HTMLDivElement>(null);
   const isLoading = status === "streaming" || status === "submitted";
 
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, isLoading]);
+  const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
+  const heroOpacity = useTransform(scrollYProgress, [0, 1], [1, 0]);
+  const heroScale = useTransform(scrollYProgress, [0, 1], [1, 0.95]);
+  const heroY = useTransform(scrollYProgress, [0, 1], [0, 80]);
 
-  function askQuestion(q: string) {
+  useEffect(() => { endRef.current?.scrollIntoView({ behavior: "smooth" }); }, [messages, isLoading]);
+
+  function ask(q: string) {
     sendMessage({ text: q });
     chatRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
-  function handleFormSubmit(e: React.FormEvent) {
+  function submit(e: React.FormEvent) {
     e.preventDefault();
-    if (!inputValue.trim() || isLoading) return;
-    sendMessage({ text: inputValue });
-    setInputValue("");
+    if (!input.trim() || isLoading) return;
+    sendMessage({ text: input });
+    setInput("");
   }
 
-  const fadeUp = {
-    hidden: { opacity: 0, y: 30 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" as const } },
-  };
-
-  const stagger = {
-    visible: { transition: { staggerChildren: 0.1 } },
-  };
-
   return (
-    <main className="min-h-screen overflow-x-hidden">
-      {/* Nav */}
-      <nav className="fixed top-0 left-0 right-0 z-50 glass border-b border-[var(--border)]">
-        <div className="max-w-6xl mx-auto px-6 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[var(--gradient-1)] to-[var(--gradient-2)] flex items-center justify-center text-white font-bold text-xs shadow-sm">
-              MP
-            </div>
-            <span className="font-semibold text-sm">Mansi Patil</span>
-          </div>
-          <div className="flex items-center gap-5 text-sm">
-            <a href="#experience" className="text-[var(--text-secondary)] hover:text-[var(--accent)] transition font-medium">Experience</a>
-            <a href="#projects" className="text-[var(--text-secondary)] hover:text-[var(--accent)] transition font-medium">Projects</a>
-            <a href="#chat" className="text-[var(--text-secondary)] hover:text-[var(--accent)] transition font-medium">Ask AI</a>
-            <a href="#oss" className="text-[var(--text-secondary)] hover:text-[var(--accent)] transition font-medium">Open Source</a>
-            <a href="https://github.com/Mansi2221" target="_blank" rel="noopener" className="text-[var(--text-secondary)] hover:text-[var(--text)] transition">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
-            </a>
-            <a href="https://linkedin.com/in/mansipatil22" target="_blank" rel="noopener" className="text-[var(--text-secondary)] hover:text-[var(--text)] transition">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
-            </a>
-          </div>
-        </div>
-      </nav>
+    <>
+      <div className="aurora" />
+      <div className="noise" />
 
-      {/* Hero */}
-      <section className="hero-bg pt-28 pb-20 px-6 relative">
-        <div className="absolute top-20 left-[10%] w-72 h-72 bg-indigo-200/30 rounded-full blur-3xl animate-float"></div>
-        <div className="absolute top-32 right-[15%] w-56 h-56 bg-purple-200/20 rounded-full blur-3xl animate-float-delay"></div>
-        <div className="absolute bottom-10 left-[40%] w-40 h-40 bg-pink-200/20 rounded-full blur-3xl animate-float-delay-2"></div>
-
-        <motion.div
-          className="max-w-4xl mx-auto text-center relative z-10"
-          initial="hidden"
-          animate="visible"
-          variants={stagger}
-        >
-          <motion.div variants={fadeUp} className="mb-4">
-            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[var(--accent-bg)] text-[var(--accent)] text-sm font-medium border border-[var(--accent-border)]">
-              <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse-ring"></span>
-              Open to FDE roles
-            </span>
-          </motion.div>
-
-          <motion.h1 variants={fadeUp} className="text-5xl md:text-7xl font-bold tracking-tight leading-tight mb-6">
-            Hi, I&apos;m <span className="gradient-text">Mansi</span>
-            <br />
-            <span className="text-3xl md:text-4xl font-medium text-[var(--text-secondary)]">
-              I take AI from prototype to production
-            </span>
-          </motion.h1>
-
-          <motion.p variants={fadeUp} className="text-lg text-[var(--text-secondary)] max-w-2xl mx-auto mb-8 leading-relaxed">
-            4+ years building backend &amp; GenAI systems for enterprise clients.
-            I scope the problem, build multi-agent workflows and RAG pipelines, add
-            guardrails, and deploy into production — end to end.
-            <br />
-            <strong className="text-[var(--text)]">FDE Intern @ IBM &nbsp;·&nbsp; MS Business Analytics, Purdue &apos;26</strong>
-          </motion.p>
-
-          <motion.div variants={fadeUp} className="flex flex-wrap gap-3 justify-center">
-            <a
-              href="#chat"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-[var(--gradient-1)] to-[var(--gradient-2)] text-white font-medium shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5"
-            >
-              💬 Ask My AI Portfolio
-            </a>
-            <a
-              href="#projects"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-white border border-[var(--border)] text-[var(--text)] font-medium shadow-sm hover:shadow-md transition-all hover:-translate-y-0.5"
-            >
-              View Projects →
-            </a>
-          </motion.div>
-        </motion.div>
-      </section>
-
-      {/* Stats */}
-      <section className="px-6 -mt-8 relative z-20">
-        <div className="max-w-4xl mx-auto">
-          <motion.div
-            className="grid grid-cols-2 md:grid-cols-4 gap-4"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-50px" }}
-            variants={stagger}
-          >
-            {STATS.map((s) => (
-              <motion.div
-                key={s.label}
-                variants={fadeUp}
-                className="bg-white rounded-xl p-5 text-center shadow-sm border border-[var(--border)] hover:shadow-md transition"
-              >
-                <div className="text-2xl mb-1">{s.icon}</div>
-                <div className="text-3xl font-bold text-[var(--text)]">
-                  <AnimatedCounter value={s.value} suffix={s.suffix} />
-                </div>
-                <div className="text-sm text-[var(--text-secondary)] mt-0.5">{s.label}</div>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Chat */}
-      <section id="chat" ref={chatRef} className="px-6 py-20">
-        <div className="max-w-3xl mx-auto">
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={stagger}
-            className="text-center mb-8"
-          >
-            <motion.h2 variants={fadeUp} className="text-3xl font-bold mb-2">
-              Ask <span className="gradient-text">anything</span> about my work
-            </motion.h2>
-            <motion.p variants={fadeUp} className="text-[var(--text-secondary)]">
-              Powered by Claude — every answer grounded in real code and real contributions
-            </motion.p>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-            className="bg-white rounded-2xl border border-[var(--border)] shadow-lg overflow-hidden"
-          >
-            <div className="border-b border-[var(--border)] px-5 py-3 flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <div className="w-2.5 h-2.5 rounded-full bg-green-400"></div>
-                <span className="text-sm font-medium text-[var(--text-secondary)]">AI Portfolio Assistant</span>
+      <main className="relative z-10">
+        {/* ── NAV ── */}
+        <nav className="fixed top-0 inset-x-0 z-50 glass">
+          <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center text-white font-bold text-xs animate-pulse-glow">
+                MP
               </div>
-              <span className="text-xs text-[var(--text-secondary)] bg-[var(--tag-bg)] px-2 py-0.5 rounded-full">Claude</span>
+              <span className="font-semibold text-sm text-white/90">Mansi Patil</span>
             </div>
-
-            <div className="h-[420px] overflow-y-auto p-5 space-y-4 bg-[var(--bg-chat)]">
-              {messages.length === 0 && (
-                <div className="h-full flex flex-col items-center justify-center">
-                  <div className="text-4xl mb-4">💬</div>
-                  <p className="text-[var(--text-secondary)] mb-6 text-center text-sm">
-                    Pick a question or type your own
-                  </p>
-                  <div className="flex flex-wrap gap-2 justify-center max-w-lg">
-                    {SUGGESTED.map((s) => (
-                      <button
-                        key={s.q}
-                        onClick={() => askQuestion(s.q)}
-                        className="text-sm px-3.5 py-2 rounded-xl bg-white border border-[var(--border)] text-[var(--text-secondary)] hover:text-[var(--accent)] hover:border-[var(--accent-border)] hover:bg-[var(--accent-bg)] transition-all shadow-sm cursor-pointer flex items-center gap-1.5"
-                      >
-                        <span>{s.icon}</span> {s.q}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {messages.map((m) => (
-                <motion.div
-                  key={m.id}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3 }}
-                  className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}
-                >
-                  <div className={`max-w-[85%] rounded-2xl px-4 py-3 text-sm leading-relaxed shadow-sm ${
-                    m.role === "user"
-                      ? "bg-gradient-to-r from-[var(--gradient-1)] to-[var(--gradient-2)] text-white rounded-br-sm"
-                      : "bg-white text-[var(--text)] border border-[var(--border)] rounded-bl-sm"
-                  }`}>
-                    <div className="whitespace-pre-wrap">{getMessageText(m)}</div>
-                  </div>
-                </motion.div>
+            <div className="flex items-center gap-5 text-sm">
+              {["Experience", "Projects", "Skills", "Ask AI"].map((l) => (
+                <a key={l} href={`#${l.toLowerCase().replace(" ", "-")}`} className="text-white/40 hover:text-white transition font-medium hidden sm:block">
+                  {l}
+                </a>
               ))}
-
-              {isLoading && messages.length > 0 && messages[messages.length - 1]?.role !== "assistant" && (
-                <div className="flex justify-start">
-                  <div className="bg-white rounded-2xl rounded-bl-sm px-4 py-3 border border-[var(--border)] shadow-sm flex gap-1.5">
-                    <span className="typing-dot w-2 h-2 bg-[var(--accent)] rounded-full"></span>
-                    <span className="typing-dot w-2 h-2 bg-[var(--accent-light)] rounded-full"></span>
-                    <span className="typing-dot w-2 h-2 bg-purple-300 rounded-full"></span>
-                  </div>
-                </div>
-              )}
-              <div ref={messagesEndRef} />
+              <a href="https://github.com/Mansi2221" target="_blank" rel="noopener" className="text-white/40 hover:text-white transition">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+              </a>
+              <a href="https://linkedin.com/in/mansipatil22" target="_blank" rel="noopener" className="text-white/40 hover:text-white transition">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+              </a>
             </div>
+          </div>
+        </nav>
 
-            <form onSubmit={handleFormSubmit} className="border-t border-[var(--border)] p-4 flex gap-3 bg-white">
-              <input
-                value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
-                placeholder="Ask about my projects, skills, experience..."
-                className="flex-1 bg-[var(--bg-chat)] border border-[var(--border)] rounded-xl px-4 py-2.5 text-sm placeholder-[var(--text-secondary)] focus:outline-none focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent-bg)] transition"
-              />
-              <button
-                type="submit"
-                disabled={isLoading || !inputValue.trim()}
-                className="bg-gradient-to-r from-[var(--gradient-1)] to-[var(--gradient-2)] hover:opacity-90 disabled:opacity-40 text-white px-5 py-2.5 rounded-xl text-sm font-medium transition cursor-pointer disabled:cursor-not-allowed shadow-sm"
-              >
-                Send
-              </button>
-            </form>
-          </motion.div>
-        </div>
-      </section>
+        {/* ── HERO ── */}
+        <section ref={heroRef} className="relative min-h-screen flex items-center justify-center px-6 overflow-hidden">
+          {/* Floating orbs */}
+          <div className="absolute top-20 left-[8%] w-32 h-32 rounded-full bg-purple-500/20 blur-2xl animate-float" />
+          <div className="absolute top-40 right-[12%] w-24 h-24 rounded-full bg-blue-500/20 blur-2xl animate-float-2" />
+          <div className="absolute bottom-32 left-[20%] w-20 h-20 rounded-full bg-pink-500/15 blur-2xl animate-float-3" />
+          <div className="absolute bottom-20 right-[25%] w-28 h-28 rounded-full bg-cyan-500/15 blur-2xl animate-float" />
+          <div className="absolute top-[30%] left-[50%] w-16 h-16 rounded-full bg-yellow-400/10 blur-xl animate-float-2" />
 
-      {/* Projects */}
-      <section id="projects" className="px-6 py-20 bg-gradient-to-b from-white to-[var(--bg)]">
-        <div className="max-w-6xl mx-auto">
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={stagger}
-            className="text-center mb-12"
-          >
-            <motion.h2 variants={fadeUp} className="text-3xl font-bold mb-2">
-              What I&apos;ve <span className="gradient-text">Built</span>
-            </motion.h2>
-            <motion.p variants={fadeUp} className="text-[var(--text-secondary)]">
-              End-to-end — from data layer to UI to deployment
+          <motion.div style={{ opacity: heroOpacity, scale: heroScale, y: heroY }} className="text-center relative z-10 max-w-5xl">
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
+              <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-medium glass mb-6">
+                <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+                <span className="text-green-400">Open to FDE roles</span>
+              </span>
+            </motion.div>
+
+            <motion.h1
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.1 }}
+              className="text-6xl sm:text-7xl md:text-8xl font-black tracking-tight leading-[0.9] mb-6"
+            >
+              <span className="text-white">Hi, I&apos;m </span>
+              <span className="grad-text-rainbow">Mansi</span>
+            </motion.h1>
+
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.3 }}
+              className="text-xl sm:text-2xl text-white/50 font-medium max-w-2xl mx-auto mb-4"
+            >
+              I take AI from <span className="text-purple-400">prototype</span> to{" "}
+              <span className="text-blue-400">production</span> with customers
             </motion.p>
-          </motion.div>
 
-          <motion.div
-            className="grid md:grid-cols-2 lg:grid-cols-3 gap-5"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-50px" }}
-            variants={stagger}
-          >
-            {PROJECTS.map((p) => (
-              <motion.div
-                key={p.name}
-                variants={fadeUp}
-                whileHover={{ y: -4, transition: { duration: 0.2 } }}
-                className="bg-white rounded-2xl p-6 border border-[var(--border)] shadow-sm hover:shadow-lg transition-all group"
-              >
-                <div className="flex items-start justify-between mb-3">
-                  <div className="flex items-center gap-2.5">
-                    <span className="text-2xl">{p.emoji}</span>
-                    <h3 className="text-lg font-semibold">{p.name}</h3>
-                  </div>
-                  <div className="flex gap-2 text-xs font-medium">
-                    {p.live && (
-                      <a href={p.live} target="_blank" rel="noopener" className="text-green-600 hover:underline">Live ↗</a>
-                    )}
-                    <a href={p.code} target="_blank" rel="noopener" className="text-[var(--text-secondary)] hover:underline">Code ↗</a>
-                  </div>
-                </div>
-                <p className="text-sm text-[var(--text-secondary)] mb-4 leading-relaxed">{p.desc}</p>
-                <div className="flex flex-wrap gap-1.5">
-                  {p.tags.map((t) => (
-                    <span key={t} className="text-xs px-2.5 py-1 rounded-lg bg-[var(--tag-bg)] text-[var(--tag-text)] font-medium">
-                      {t}
-                    </span>
-                  ))}
-                </div>
-                <div className="h-1 mt-4 rounded-full opacity-0 group-hover:opacity-100 transition-opacity" style={{ background: `linear-gradient(90deg, ${p.color}, transparent)` }}></div>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Open Source */}
-      <section id="oss" className="px-6 py-20">
-        <div className="max-w-4xl mx-auto">
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={stagger}
-            className="text-center mb-12"
-          >
-            <motion.h2 variants={fadeUp} className="text-3xl font-bold mb-2">
-              Open <span className="gradient-text">Source</span>
-            </motion.h2>
-            <motion.p variants={fadeUp} className="text-[var(--text-secondary)]">
-              11 PRs to the AI infrastructure I actually deploy with
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.5 }}
+              className="text-sm text-white/30 mb-10"
+            >
+              4+ years · FDE Intern @ IBM · MS Purdue &apos;26 · 10+ GenAI PoCs shipped
             </motion.p>
-          </motion.div>
-
-          <motion.div
-            className="grid md:grid-cols-3 gap-5"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={stagger}
-          >
-            {OSS.map((o) => (
-              <motion.a
-                key={o.repo}
-                variants={fadeUp}
-                href={`https://github.com/${o.repo}`}
-                target="_blank"
-                rel="noopener"
-                whileHover={{ y: -4 }}
-                className="block bg-white rounded-2xl p-6 border border-[var(--border)] shadow-sm hover:shadow-lg transition-all"
-              >
-                <div className="text-sm font-medium text-[var(--accent)] mb-1">{o.repo}</div>
-                <div className="text-4xl font-bold mb-2">{o.count} <span className="text-lg font-normal text-[var(--text-secondary)]">PR{o.count > 1 ? "s" : ""}</span></div>
-                <p className="text-xs text-[var(--text-secondary)] leading-relaxed">{o.desc}</p>
-              </motion.a>
-            ))}
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Experience */}
-      <section id="experience" className="px-6 py-20 bg-gradient-to-b from-[var(--bg)] to-white">
-        <div className="max-w-4xl mx-auto">
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={stagger}
-            className="text-center mb-12"
-          >
-            <motion.h2 variants={fadeUp} className="text-3xl font-bold mb-2">
-              Work <span className="gradient-text">Experience</span>
-            </motion.h2>
-            <motion.p variants={fadeUp} className="text-[var(--text-secondary)]">
-              4+ years across enterprise AI, backend engineering, and client-facing delivery
-            </motion.p>
-          </motion.div>
-
-          <div className="relative">
-            <div className="absolute left-[22px] top-0 bottom-0 w-0.5 bg-gradient-to-b from-[var(--gradient-1)] via-[var(--gradient-2)] to-[var(--gradient-3)] hidden md:block"></div>
 
             <motion.div
-              className="space-y-8"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6 }}
+              className="flex flex-wrap gap-4 justify-center"
+            >
+              <a href="#ask-ai" className="group px-7 py-3.5 rounded-2xl bg-gradient-to-r from-purple-500 to-blue-500 text-white font-semibold text-sm shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40 transition-all hover:-translate-y-0.5">
+                💬 Ask My AI Portfolio
+                <span className="ml-1 inline-block group-hover:translate-x-1 transition-transform">→</span>
+              </a>
+              <a href="#experience" className="px-7 py-3.5 rounded-2xl glass text-white/80 font-semibold text-sm hover:text-white hover:border-white/20 transition-all hover:-translate-y-0.5">
+                View Experience
+              </a>
+            </motion.div>
+
+            {/* Scroll indicator */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 1.2 }}
+              className="absolute -bottom-20 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
+            >
+              <span className="text-xs text-white/20">scroll</span>
+              <div className="w-5 h-8 rounded-full border border-white/10 flex items-start justify-center p-1">
+                <div className="w-1 h-2 rounded-full bg-white/30 animate-scroll" />
+              </div>
+            </motion.div>
+          </motion.div>
+        </section>
+
+        {/* ── SKILL MARQUEE ── */}
+        <section className="py-8 overflow-hidden border-y border-white/5">
+          <div className="animate-marquee flex gap-8 whitespace-nowrap">
+            {[...MARQUEE_SKILLS, ...MARQUEE_SKILLS].map((s, i) => (
+              <span key={i} className="text-sm font-medium text-white/15 hover:text-white/40 transition cursor-default flex items-center gap-2">
+                <span className="w-1 h-1 rounded-full bg-purple-500/50" />
+                {s}
+              </span>
+            ))}
+          </div>
+        </section>
+
+        {/* ── STATS ── */}
+        <section className="py-20 px-6">
+          <div className="max-w-5xl mx-auto">
+            <motion.div
+              className="grid grid-cols-2 md:grid-cols-4 gap-4"
               initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: "-50px" }}
+              whileInView="show"
+              viewport={{ once: true, margin: "-80px" }}
               variants={stagger}
             >
+              {[
+                { v: 4, s: "+", l: "Years Exp", color: "purple" },
+                { v: 10, s: "+", l: "GenAI PoCs", color: "blue" },
+                { v: 11, s: "", l: "OSS PRs", color: "cyan" },
+                { v: 120, s: "+", l: "Tests Written", color: "green" },
+              ].map((s) => (
+                <motion.div
+                  key={s.l}
+                  variants={scaleIn}
+                  className="glass rounded-2xl p-6 text-center hover:border-white/10 transition group"
+                >
+                  <div className={`text-4xl font-black bg-gradient-to-r from-${s.color}-400 to-${s.color}-600 bg-clip-text text-transparent`}>
+                    <Counter value={s.v} suffix={s.s} />
+                  </div>
+                  <div className="text-xs text-white/30 mt-1 font-medium tracking-wide uppercase">{s.l}</div>
+                </motion.div>
+              ))}
+            </motion.div>
+          </div>
+        </section>
+
+        {/* ── EXPERIENCE ── */}
+        <section id="experience" className="py-20 px-6">
+          <div className="max-w-5xl mx-auto">
+            <motion.div initial="hidden" whileInView="show" viewport={{ once: true }} variants={stagger} className="text-center mb-16">
+              <motion.p variants={fadeUp} className="text-sm font-semibold tracking-widest text-purple-400 uppercase mb-3">Career</motion.p>
+              <motion.h2 variants={fadeUp} className="text-4xl md:text-5xl font-black">
+                Work <span className="grad-text">Experience</span>
+              </motion.h2>
+            </motion.div>
+
+            <motion.div className="space-y-6" initial="hidden" whileInView="show" viewport={{ once: true, margin: "-80px" }} variants={stagger}>
               {EXPERIENCE.map((exp) => (
-                <motion.div key={exp.role} variants={fadeUp} className="relative md:pl-14">
-                  <div className="absolute left-3 top-2 w-4 h-4 rounded-full border-[3px] border-white shadow-sm hidden md:block" style={{ background: exp.color }}></div>
-                  <div className="bg-white rounded-2xl p-6 border border-[var(--border)] shadow-sm hover:shadow-md transition">
-                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 mb-3">
-                      <div>
-                        <h3 className="text-lg font-semibold">{exp.role}</h3>
-                        <p className="text-sm font-medium" style={{ color: exp.color }}>{exp.company} · {exp.location}</p>
-                      </div>
-                      <span className="text-xs text-[var(--text-secondary)] bg-[var(--tag-bg)] px-3 py-1 rounded-full whitespace-nowrap self-start">{exp.period}</span>
+                <motion.div
+                  key={exp.role}
+                  variants={fadeUp}
+                  className="glass rounded-2xl p-6 md:p-8 card-glow group"
+                  style={{ ["--glow" as string]: exp.gradient === "from-purple-500 to-blue-500" ? "rgba(168,85,247,0.08)" : exp.gradient === "from-cyan-400 to-green-400" ? "rgba(6,182,212,0.08)" : "rgba(249,115,22,0.08)" }}
+                >
+                  <div className="flex flex-col md:flex-row md:items-start gap-4 mb-5">
+                    <span className="text-3xl">{exp.icon}</span>
+                    <div className="flex-1">
+                      <h3 className="text-lg font-bold text-white">{exp.role}</h3>
+                      <p className={`text-sm font-semibold bg-gradient-to-r ${exp.gradient} bg-clip-text text-transparent`}>
+                        {exp.company} · {exp.location}
+                      </p>
                     </div>
-                    <ul className="space-y-2">
-                      {exp.bullets.map((b, i) => (
-                        <li key={i} className="text-sm text-[var(--text-secondary)] leading-relaxed flex gap-2">
-                          <span className="text-[var(--accent)] mt-1 shrink-0">▸</span>
-                          <span>{b}</span>
-                        </li>
-                      ))}
-                    </ul>
+                    <span className="text-xs text-white/30 bg-white/5 px-3 py-1 rounded-full whitespace-nowrap self-start font-medium">{exp.period}</span>
+                  </div>
+
+                  {/* Metric pills */}
+                  <div className="grid grid-cols-3 gap-3 mb-5">
+                    {exp.highlights.map((h) => (
+                      <div key={h.label} className="bg-white/[0.03] rounded-xl p-3 text-center border border-white/[0.04]">
+                        <div className={`text-xl font-black bg-gradient-to-r ${exp.gradient} bg-clip-text text-transparent`}>{h.metric}</div>
+                        <div className="text-[10px] text-white/30 mt-0.5 leading-tight">{h.label}</div>
+                      </div>
+                    ))}
+                  </div>
+
+                  <ul className="space-y-2">
+                    {exp.bullets.map((b, i) => (
+                      <li key={i} className="text-sm text-white/40 leading-relaxed flex gap-2.5">
+                        <span className="text-purple-400 mt-0.5 shrink-0">▸</span>
+                        <span className="group-hover:text-white/60 transition">{b}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </motion.div>
+              ))}
+            </motion.div>
+
+            {/* Education */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="mt-6 glass rounded-2xl p-6 flex flex-col sm:flex-row items-start sm:items-center gap-4"
+            >
+              <span className="text-3xl">🎓</span>
+              <div className="flex-1">
+                <h3 className="font-bold text-white">Master&apos;s in Business Analytics &amp; Information Management</h3>
+                <p className="text-sm grad-text font-semibold">Purdue University (West Lafayette), USA</p>
+              </div>
+              <span className="text-xs text-white/30 bg-white/5 px-3 py-1 rounded-full whitespace-nowrap font-medium">Aug 2025 – Dec 2026</span>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* ── PROJECTS (Bento Grid) ── */}
+        <section id="projects" className="py-20 px-6">
+          <div className="max-w-5xl mx-auto">
+            <motion.div initial="hidden" whileInView="show" viewport={{ once: true }} variants={stagger} className="text-center mb-16">
+              <motion.p variants={fadeUp} className="text-sm font-semibold tracking-widest text-blue-400 uppercase mb-3">Portfolio</motion.p>
+              <motion.h2 variants={fadeUp} className="text-4xl md:text-5xl font-black">
+                What I&apos;ve <span className="grad-text-warm">Built</span>
+              </motion.h2>
+            </motion.div>
+
+            <motion.div
+              className="grid grid-cols-1 md:grid-cols-3 gap-4"
+              initial="hidden"
+              whileInView="show"
+              viewport={{ once: true, margin: "-80px" }}
+              variants={stagger}
+            >
+              {PROJECTS.map((p) => (
+                <motion.div
+                  key={p.name}
+                  variants={fadeUp}
+                  className={`glass rounded-2xl p-6 card-glow group ${p.span}`}
+                  style={{ ["--glow" as string]: p.glow }}
+                >
+                  <div className="flex items-start justify-between mb-3">
+                    <h3 className={`text-lg font-bold bg-gradient-to-r ${p.gradient} bg-clip-text text-transparent`}>
+                      {p.name}
+                    </h3>
+                    <div className="flex gap-2 text-xs font-medium">
+                      {p.live && (
+                        <a href={p.live} target="_blank" rel="noopener" className="text-green-400/60 hover:text-green-400 transition">Live ↗</a>
+                      )}
+                      <a href={p.code} target="_blank" rel="noopener" className="text-white/30 hover:text-white/60 transition">Code ↗</a>
+                    </div>
+                  </div>
+                  <p className="text-sm text-white/35 leading-relaxed mb-4 group-hover:text-white/55 transition">{p.desc}</p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {p.tags.map((t) => (
+                      <span key={t} className="text-[11px] px-2.5 py-1 rounded-lg bg-white/[0.04] text-white/30 font-medium border border-white/[0.04]">
+                        {t}
+                      </span>
+                    ))}
                   </div>
                 </motion.div>
               ))}
             </motion.div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Education */}
-      <section className="px-6 py-12">
-        <div className="max-w-4xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="bg-white rounded-2xl p-6 border border-[var(--border)] shadow-sm flex flex-col sm:flex-row items-start sm:items-center gap-4"
-          >
-            <div className="text-4xl">🎓</div>
-            <div className="flex-1">
-              <h3 className="text-lg font-semibold">Master&apos;s in Business Analytics &amp; Information Management</h3>
-              <p className="text-sm text-[var(--accent)] font-medium">Purdue University (West Lafayette), USA</p>
-            </div>
-            <span className="text-xs text-[var(--text-secondary)] bg-[var(--tag-bg)] px-3 py-1 rounded-full whitespace-nowrap">Aug 2025 – Dec 2026</span>
-          </motion.div>
-        </div>
-      </section>
+        {/* ── SKILLS ── */}
+        <section id="skills" className="py-20 px-6">
+          <div className="max-w-5xl mx-auto">
+            <motion.div initial="hidden" whileInView="show" viewport={{ once: true }} variants={stagger} className="text-center mb-16">
+              <motion.p variants={fadeUp} className="text-sm font-semibold tracking-widest text-cyan-400 uppercase mb-3">Expertise</motion.p>
+              <motion.h2 variants={fadeUp} className="text-4xl md:text-5xl font-black">
+                Tech <span className="grad-text">Stack</span>
+              </motion.h2>
+            </motion.div>
 
-      {/* Tech Stack */}
-      <section className="px-6 py-20 bg-gradient-to-b from-[var(--bg)] to-white">
-        <div className="max-w-4xl mx-auto">
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={stagger}
-          >
-            <motion.h2 variants={fadeUp} className="text-3xl font-bold mb-8 text-center">
-              Tech <span className="gradient-text">Stack</span>
-            </motion.h2>
-            <motion.div variants={fadeUp} className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-              {[
-                { cat: "GenAI & Agents", items: "LLMs · LangGraph · CrewAI · LangChain · LlamaIndex · MCP · Claude API · GPT-5 · Gemini · watsonx.ai" },
-                { cat: "RAG & LLM Engineering", items: "RAG · Text-to-SQL · Vector Embeddings · Semantic Search · Prompt Engineering · Context Engineering · Tool Calling" },
-                { cat: "LLM Eval & Safety", items: "Ragas · TruLens · LangSmith · NeMo Guardrails · Guardrails AI · Prompt Injection Mitigation · Hallucination Detection" },
-                { cat: "Backend & APIs", items: "FastAPI · Flask · Spring Boot · REST APIs · Microservices · Node.js" },
-                { cat: "Databases & Data", items: "PostgreSQL · MongoDB · Redis · Pinecone · pgvector · FAISS · ETL · Data Integration" },
-                { cat: "Cloud & DevOps", items: "Azure · AWS · Docker · Kubernetes · OpenShift · Jenkins · GitHub Actions · CI/CD" },
-                { cat: "Languages", items: "Python · Java · TypeScript · SQL" },
-                { cat: "Frontend", items: "Next.js · React · Tailwind CSS · shadcn/ui · Vercel AI SDK" },
-                { cat: "Testing", items: "PyTest · JUnit · Unit Testing · Data Validation · 120+ tests across projects" },
-              ].map((s) => (
-                <div key={s.cat} className="bg-white rounded-xl p-5 border border-[var(--border)] shadow-sm">
-                  <div className="text-sm font-semibold text-[var(--accent)] mb-2">{s.cat}</div>
-                  <div className="text-sm text-[var(--text-secondary)] leading-relaxed">{s.items}</div>
-                </div>
+            <motion.div
+              className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4"
+              initial="hidden"
+              whileInView="show"
+              viewport={{ once: true }}
+              variants={stagger}
+            >
+              {SKILLS.map((s) => (
+                <motion.div key={s.cat} variants={fadeUp} className="glass rounded-2xl p-5 card-glow group">
+                  <div className="text-sm font-bold mb-3 flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full" style={{ background: s.color }} />
+                    <span style={{ color: s.color }}>{s.cat}</span>
+                  </div>
+                  <div className="flex flex-wrap gap-1.5">
+                    {s.items.map((item) => (
+                      <span key={item} className="text-xs px-2.5 py-1.5 rounded-lg bg-white/[0.03] text-white/40 font-medium border border-white/[0.04] group-hover:text-white/60 group-hover:border-white/8 transition">
+                        {item}
+                      </span>
+                    ))}
+                  </div>
+                </motion.div>
               ))}
             </motion.div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* CTA */}
-      <section className="px-6 py-20">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="max-w-3xl mx-auto text-center bg-gradient-to-r from-[var(--gradient-1)] via-[var(--gradient-2)] to-[var(--gradient-3)] rounded-3xl p-12 text-white shadow-xl animate-gradient"
-        >
-          <h2 className="text-3xl font-bold mb-3">Let&apos;s build something together</h2>
-          <p className="text-white/80 mb-8 max-w-lg mx-auto">
-            I want to sit with your customers, understand their problems, build the system, and ship it into their environment.
-          </p>
-          <div className="flex gap-4 justify-center flex-wrap">
-            <a href="mailto:mansianilpatil2425@gmail.com" className="px-6 py-3 rounded-xl bg-white text-[var(--accent)] font-medium hover:bg-white/90 transition shadow-lg">
-              Get in touch →
-            </a>
-            <a href="https://linkedin.com/in/mansipatil22" target="_blank" rel="noopener" className="px-6 py-3 rounded-xl bg-white/15 text-white font-medium hover:bg-white/25 transition border border-white/20">
-              LinkedIn
-            </a>
           </div>
-        </motion.div>
-      </section>
+        </section>
 
-      {/* Footer */}
-      <footer className="text-center py-8 border-t border-[var(--border)] text-sm text-[var(--text-secondary)]">
-        <p>Built with Next.js + Claude API + Framer Motion</p>
-        <p className="mt-1">
-          <a href="https://github.com/Mansi2221/ask-mansi" target="_blank" rel="noopener" className="hover:text-[var(--accent)] transition">
-            View source ↗
-          </a>
-        </p>
-      </footer>
-    </main>
+        {/* ── OPEN SOURCE ── */}
+        <section className="py-20 px-6">
+          <div className="max-w-5xl mx-auto">
+            <motion.div initial="hidden" whileInView="show" viewport={{ once: true }} variants={stagger} className="text-center mb-12">
+              <motion.p variants={fadeUp} className="text-sm font-semibold tracking-widest text-green-400 uppercase mb-3">Contributions</motion.p>
+              <motion.h2 variants={fadeUp} className="text-4xl md:text-5xl font-black">
+                Open <span className="grad-text-warm">Source</span>
+              </motion.h2>
+              <motion.p variants={fadeUp} className="text-white/30 mt-3">11 PRs merged to the AI infra I actually deploy with</motion.p>
+            </motion.div>
+
+            <motion.div className="grid md:grid-cols-3 gap-4" initial="hidden" whileInView="show" viewport={{ once: true }} variants={stagger}>
+              {OSS.map((o) => (
+                <motion.a
+                  key={o.repo}
+                  variants={scaleIn}
+                  href={`https://github.com/${o.repo}`}
+                  target="_blank"
+                  rel="noopener"
+                  className="glass rounded-2xl p-6 card-glow block text-center group"
+                >
+                  <div className="text-5xl font-black mb-2" style={{ color: o.color }}>
+                    <Counter value={o.count} />
+                  </div>
+                  <div className="text-xs text-white/30 font-medium">PR{o.count > 1 ? "s" : ""} to</div>
+                  <div className="text-sm font-semibold text-white/60 mt-1 group-hover:text-white transition">{o.repo.split("/")[1]}</div>
+                </motion.a>
+              ))}
+            </motion.div>
+          </div>
+        </section>
+
+        {/* ── ASK AI ── */}
+        <section id="ask-ai" ref={chatRef} className="py-20 px-6">
+          <div className="max-w-3xl mx-auto">
+            <motion.div initial="hidden" whileInView="show" viewport={{ once: true }} variants={stagger} className="text-center mb-10">
+              <motion.p variants={fadeUp} className="text-sm font-semibold tracking-widest text-pink-400 uppercase mb-3">AI-Powered</motion.p>
+              <motion.h2 variants={fadeUp} className="text-4xl md:text-5xl font-black">
+                Ask <span className="grad-text-rainbow">Anything</span>
+              </motion.h2>
+              <motion.p variants={fadeUp} className="text-white/30 mt-3">Powered by Claude — every answer grounded in real work</motion.p>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="glass rounded-2xl overflow-hidden shadow-2xl shadow-purple-500/5"
+            >
+              <div className="border-b border-white/5 px-5 py-3 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="w-2.5 h-2.5 rounded-full bg-green-400 animate-pulse" />
+                  <span className="text-xs font-medium text-white/40">AI Portfolio Assistant</span>
+                </div>
+                <span className="text-[10px] text-white/20 bg-white/5 px-2.5 py-0.5 rounded-full font-medium">Claude</span>
+              </div>
+
+              <div className="h-[420px] overflow-y-auto p-5 space-y-4">
+                {messages.length === 0 && (
+                  <div className="h-full flex flex-col items-center justify-center">
+                    <div className="text-5xl mb-4 animate-float">💬</div>
+                    <p className="text-white/25 mb-6 text-sm">Pick a question or type your own</p>
+                    <div className="flex flex-wrap gap-2 justify-center max-w-lg">
+                      {SUGGESTED.map((s) => (
+                        <button
+                          key={s.q}
+                          onClick={() => ask(s.q)}
+                          className="text-xs px-3.5 py-2 rounded-xl glass text-white/35 hover:text-white/70 hover:border-purple-500/30 transition-all cursor-pointer flex items-center gap-1.5"
+                        >
+                          <span>{s.icon}</span> {s.q}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {messages.map((m) => (
+                  <motion.div
+                    key={m.id}
+                    initial={{ opacity: 0, y: 10, scale: 0.98 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    transition={{ duration: 0.3 }}
+                    className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}
+                  >
+                    <div className={`max-w-[85%] rounded-2xl px-4 py-3 text-sm leading-relaxed ${
+                      m.role === "user"
+                        ? "bg-gradient-to-r from-purple-500 to-blue-500 text-white rounded-br-sm shadow-lg shadow-purple-500/20"
+                        : "glass text-white/70 rounded-bl-sm"
+                    }`}>
+                      <div className="whitespace-pre-wrap">{getMessageText(m)}</div>
+                    </div>
+                  </motion.div>
+                ))}
+
+                {isLoading && messages.length > 0 && messages[messages.length - 1]?.role !== "assistant" && (
+                  <div className="flex justify-start">
+                    <div className="glass rounded-2xl rounded-bl-sm px-4 py-3 flex gap-1.5">
+                      <span className="typing-dot w-2 h-2 bg-purple-400 rounded-full" />
+                      <span className="typing-dot w-2 h-2 bg-blue-400 rounded-full" />
+                      <span className="typing-dot w-2 h-2 bg-cyan-400 rounded-full" />
+                    </div>
+                  </div>
+                )}
+                <div ref={endRef} />
+              </div>
+
+              <form onSubmit={submit} className="border-t border-white/5 p-4 flex gap-3">
+                <input
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  placeholder="Ask about my projects, skills, experience..."
+                  className="flex-1 bg-white/[0.03] border border-white/[0.06] rounded-xl px-4 py-2.5 text-sm text-white placeholder-white/20 focus:outline-none focus:border-purple-500/40 focus:ring-1 focus:ring-purple-500/20 transition"
+                />
+                <button
+                  type="submit"
+                  disabled={isLoading || !input.trim()}
+                  className="bg-gradient-to-r from-purple-500 to-blue-500 hover:opacity-90 disabled:opacity-30 text-white px-5 py-2.5 rounded-xl text-sm font-semibold transition cursor-pointer disabled:cursor-not-allowed shadow-lg shadow-purple-500/20"
+                >
+                  Send
+                </button>
+              </form>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* ── CTA ── */}
+        <section className="py-20 px-6">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            className="max-w-4xl mx-auto text-center relative overflow-hidden rounded-3xl p-12 md:p-16"
+          >
+            {/* Animated gradient background */}
+            <div className="absolute inset-0 bg-gradient-to-r from-purple-600 via-blue-600 to-cyan-600 opacity-90" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
+            <div className="absolute top-0 left-[20%] w-64 h-64 rounded-full bg-pink-500/30 blur-3xl animate-float" />
+            <div className="absolute bottom-0 right-[20%] w-48 h-48 rounded-full bg-cyan-400/30 blur-3xl animate-float-2" />
+
+            <div className="relative z-10">
+              <h2 className="text-3xl md:text-5xl font-black mb-4 text-white">Let&apos;s build something <br className="hidden sm:block" />together</h2>
+              <p className="text-white/60 mb-8 max-w-lg mx-auto text-sm md:text-base">
+                I want to sit with your customers, understand their problems, build the system, and ship it into production.
+              </p>
+              <div className="flex gap-4 justify-center flex-wrap">
+                <a href="mailto:mansianilpatil2425@gmail.com" className="px-7 py-3.5 rounded-2xl bg-white text-purple-600 font-bold text-sm hover:bg-white/90 transition shadow-xl hover:-translate-y-0.5">
+                  Get in touch →
+                </a>
+                <a href="https://linkedin.com/in/mansipatil22" target="_blank" rel="noopener" className="px-7 py-3.5 rounded-2xl bg-white/10 text-white font-bold text-sm hover:bg-white/20 transition border border-white/20 hover:-translate-y-0.5">
+                  LinkedIn
+                </a>
+              </div>
+            </div>
+          </motion.div>
+        </section>
+
+        {/* ── FOOTER ── */}
+        <footer className="text-center py-10 border-t border-white/5 text-xs text-white/20">
+          <p>Built with Next.js + Claude API + Framer Motion</p>
+          <p className="mt-2">
+            <a href="https://github.com/Mansi2221/ask-mansi" target="_blank" rel="noopener" className="hover:text-white/40 transition">View source ↗</a>
+          </p>
+        </footer>
+      </main>
+    </>
   );
 }
