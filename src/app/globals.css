@@ -1,5 +1,11 @@
 @import "tailwindcss";
 
+@theme {
+  --color-bg: #050510;
+  --color-bg-card: #0c0c1d;
+  --color-text: #f0f0ff;
+}
+
 :root {
   --bg: #050510;
   --bg-card: #0c0c1d;
@@ -21,9 +27,9 @@
 
 * { box-sizing: border-box; }
 
-body {
-  background: var(--bg);
-  color: var(--text);
+html, body {
+  background: #050510 !important;
+  color: #f0f0ff !important;
   font-family: "Inter", system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
