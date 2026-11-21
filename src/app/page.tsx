@@ -69,10 +69,54 @@ const PROJECTS = [
 ];
 
 const STATS = [
+  { label: "Years Experience", value: 4, suffix: "+", icon: "💼" },
   { label: "Live Projects", value: 8, suffix: "", icon: "🚀" },
   { label: "Open Source PRs", value: 11, suffix: "", icon: "🔀" },
-  { label: "Live Demos", value: 5, suffix: "", icon: "🌐" },
-  { label: "Tests Written", value: 120, suffix: "+", icon: "✅" },
+  { label: "GenAI PoCs Delivered", value: 10, suffix: "+", icon: "⚡" },
+];
+
+const EXPERIENCE = [
+  {
+    role: "Forward Deployed Engineer (GenAI) Intern",
+    company: "IBM",
+    location: "USA",
+    period: "May 2026 – Aug 2026",
+    color: "#6366f1",
+    bullets: [
+      "Engineered multi-agent AI workflows using LangGraph, watsonx.ai, MCP, and Python — planning, tool routing, and self-reflection in enterprise SDLC",
+      "Built RAG pipelines with watsonx.data, vector embeddings, FastAPI, and secure data mappings — reduced manual lookup time by ~20%",
+      "Collaborated with client PMs and engineers to translate business requirements into working GenAI prototypes with guardrails",
+      "Evaluated outputs across GPT-5, Claude, Gemini, DeepSeek, and Llama — reduced inaccurate responses by 45%, increased consistency by 26%",
+      "Delivered 10+ GenAI PoCs with client stakeholders using Claude Code and GitHub Copilot — reduced evaluation time by 35%",
+    ],
+  },
+  {
+    role: "AI Engineer",
+    company: "Hexaware Technologies",
+    location: "India",
+    period: "Aug 2023 – Jul 2025",
+    color: "#8b5cf6",
+    bullets: [
+      "Partnered with business and client teams to scope GenAI use cases, define AI requirements, and deploy solutions in enterprise environments",
+      "Increased retrieval relevance by 15% building RAG pipelines with LangChain, LlamaIndex, embeddings, and vector databases",
+      "Cut manual research effort by 45% with semantic search and Text-to-SQL on Azure OpenAI, LangChain, and Pinecone",
+      "Reduced manual handling time by 20% with multi-agent workflows built on CrewAI and LLM tool calling",
+      "Reduced average token consumption by 10% through evaluation and tuning with Ragas and LangSmith",
+    ],
+  },
+  {
+    role: "Backend Software Engineer",
+    company: "Cybage Software",
+    location: "India",
+    period: "Jun 2021 – Jul 2023",
+    color: "#ec4899",
+    bullets: [
+      "Built REST APIs, business logic, and application integrations in Java and Spring Boot for enterprise applications",
+      "Optimized SQL queries and PostgreSQL indexing — reduced response time by 10%",
+      "Built microservice components with API integrations, Redis caching to improve service performance",
+      "Automated builds and deployments with Git, Docker, Jenkins, and AWS — reduced manual steps by 15%",
+    ],
+  },
 ];
 
 const OSS = [
@@ -159,6 +203,7 @@ export default function Home() {
             <span className="font-semibold text-sm">Mansi Patil</span>
           </div>
           <div className="flex items-center gap-5 text-sm">
+            <a href="#experience" className="text-[var(--text-secondary)] hover:text-[var(--accent)] transition font-medium">Experience</a>
             <a href="#projects" className="text-[var(--text-secondary)] hover:text-[var(--accent)] transition font-medium">Projects</a>
             <a href="#chat" className="text-[var(--text-secondary)] hover:text-[var(--accent)] transition font-medium">Ask AI</a>
             <a href="#oss" className="text-[var(--text-secondary)] hover:text-[var(--accent)] transition font-medium">Open Source</a>
@@ -200,10 +245,11 @@ export default function Home() {
           </motion.h1>
 
           <motion.p variants={fadeUp} className="text-lg text-[var(--text-secondary)] max-w-2xl mx-auto mb-8 leading-relaxed">
-            Forward Deployed Engineer @ IBM. I build multi-agent systems, RAG pipelines,
-            and guardrail engines — then deploy them into real customer environments.
+            4+ years building backend &amp; GenAI systems for enterprise clients.
+            I scope the problem, build multi-agent workflows and RAG pipelines, add
+            guardrails, and deploy into production — end to end.
             <br />
-            <strong className="text-[var(--text)]">MS Business Analytics, Purdue &apos;26</strong>
+            <strong className="text-[var(--text)]">FDE Intern @ IBM &nbsp;·&nbsp; MS Business Analytics, Purdue &apos;26</strong>
           </motion.p>
 
           <motion.div variants={fadeUp} className="flex flex-wrap gap-3 justify-center">
@@ -456,6 +502,80 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Experience */}
+      <section id="experience" className="px-6 py-20 bg-gradient-to-b from-[var(--bg)] to-white">
+        <div className="max-w-4xl mx-auto">
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={stagger}
+            className="text-center mb-12"
+          >
+            <motion.h2 variants={fadeUp} className="text-3xl font-bold mb-2">
+              Work <span className="gradient-text">Experience</span>
+            </motion.h2>
+            <motion.p variants={fadeUp} className="text-[var(--text-secondary)]">
+              4+ years across enterprise AI, backend engineering, and client-facing delivery
+            </motion.p>
+          </motion.div>
+
+          <div className="relative">
+            <div className="absolute left-[22px] top-0 bottom-0 w-0.5 bg-gradient-to-b from-[var(--gradient-1)] via-[var(--gradient-2)] to-[var(--gradient-3)] hidden md:block"></div>
+
+            <motion.div
+              className="space-y-8"
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-50px" }}
+              variants={stagger}
+            >
+              {EXPERIENCE.map((exp) => (
+                <motion.div key={exp.role} variants={fadeUp} className="relative md:pl-14">
+                  <div className="absolute left-3 top-2 w-4 h-4 rounded-full border-[3px] border-white shadow-sm hidden md:block" style={{ background: exp.color }}></div>
+                  <div className="bg-white rounded-2xl p-6 border border-[var(--border)] shadow-sm hover:shadow-md transition">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 mb-3">
+                      <div>
+                        <h3 className="text-lg font-semibold">{exp.role}</h3>
+                        <p className="text-sm font-medium" style={{ color: exp.color }}>{exp.company} · {exp.location}</p>
+                      </div>
+                      <span className="text-xs text-[var(--text-secondary)] bg-[var(--tag-bg)] px-3 py-1 rounded-full whitespace-nowrap self-start">{exp.period}</span>
+                    </div>
+                    <ul className="space-y-2">
+                      {exp.bullets.map((b, i) => (
+                        <li key={i} className="text-sm text-[var(--text-secondary)] leading-relaxed flex gap-2">
+                          <span className="text-[var(--accent)] mt-1 shrink-0">▸</span>
+                          <span>{b}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </motion.div>
+              ))}
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* Education */}
+      <section className="px-6 py-12">
+        <div className="max-w-4xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="bg-white rounded-2xl p-6 border border-[var(--border)] shadow-sm flex flex-col sm:flex-row items-start sm:items-center gap-4"
+          >
+            <div className="text-4xl">🎓</div>
+            <div className="flex-1">
+              <h3 className="text-lg font-semibold">Master&apos;s in Business Analytics &amp; Information Management</h3>
+              <p className="text-sm text-[var(--accent)] font-medium">Purdue University (West Lafayette), USA</p>
+            </div>
+            <span className="text-xs text-[var(--text-secondary)] bg-[var(--tag-bg)] px-3 py-1 rounded-full whitespace-nowrap">Aug 2025 – Dec 2026</span>
+          </motion.div>
+        </div>
+      </section>
+
       {/* Tech Stack */}
       <section className="px-6 py-20 bg-gradient-to-b from-[var(--bg)] to-white">
         <div className="max-w-4xl mx-auto">
@@ -468,14 +588,17 @@ export default function Home() {
             <motion.h2 variants={fadeUp} className="text-3xl font-bold mb-8 text-center">
               Tech <span className="gradient-text">Stack</span>
             </motion.h2>
-            <motion.div variants={fadeUp} className="grid grid-cols-2 md:grid-cols-3 gap-4">
+            <motion.div variants={fadeUp} className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
               {[
-                { cat: "AI / ML", items: "Claude API · LangGraph · LangChain · Vercel AI SDK · FAISS · HuggingFace" },
-                { cat: "Backend", items: "FastAPI · Node.js · Supabase · PostgreSQL · Redis" },
-                { cat: "Frontend", items: "Next.js · React · Tailwind CSS · shadcn/ui" },
-                { cat: "Languages", items: "Python · TypeScript · SQL" },
-                { cat: "Infra", items: "Docker · Vercel · AWS · GitHub Actions" },
-                { cat: "Specialization", items: "Multi-agent · RAG · Guardrails · LLM Eval · Production AI" },
+                { cat: "GenAI & Agents", items: "LLMs · LangGraph · CrewAI · LangChain · LlamaIndex · MCP · Claude API · GPT-5 · Gemini · watsonx.ai" },
+                { cat: "RAG & LLM Engineering", items: "RAG · Text-to-SQL · Vector Embeddings · Semantic Search · Prompt Engineering · Context Engineering · Tool Calling" },
+                { cat: "LLM Eval & Safety", items: "Ragas · TruLens · LangSmith · NeMo Guardrails · Guardrails AI · Prompt Injection Mitigation · Hallucination Detection" },
+                { cat: "Backend & APIs", items: "FastAPI · Flask · Spring Boot · REST APIs · Microservices · Node.js" },
+                { cat: "Databases & Data", items: "PostgreSQL · MongoDB · Redis · Pinecone · pgvector · FAISS · ETL · Data Integration" },
+                { cat: "Cloud & DevOps", items: "Azure · AWS · Docker · Kubernetes · OpenShift · Jenkins · GitHub Actions · CI/CD" },
+                { cat: "Languages", items: "Python · Java · TypeScript · SQL" },
+                { cat: "Frontend", items: "Next.js · React · Tailwind CSS · shadcn/ui · Vercel AI SDK" },
+                { cat: "Testing", items: "PyTest · JUnit · Unit Testing · Data Validation · 120+ tests across projects" },
               ].map((s) => (
                 <div key={s.cat} className="bg-white rounded-xl p-5 border border-[var(--border)] shadow-sm">
                   <div className="text-sm font-semibold text-[var(--accent)] mb-2">{s.cat}</div>
