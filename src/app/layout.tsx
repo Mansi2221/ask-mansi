@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" className={`${inter.className} h-full`}>
-      <body className="min-h-full flex flex-col" style={{ background: "#050510", color: "#f0f0ff" }}>{children}</body>
+      <body className="min-h-full flex flex-col" style={{ background: "#FFF8F5", color: "#2D2235" }}>{children}</body>
     </html>
   );
 }
